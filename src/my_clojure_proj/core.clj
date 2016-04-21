@@ -25,6 +25,9 @@
     :else (not (is_not_prime_bad x 2))))
 
 
+; (is_prime 8191)
+; stackoverflow:
+; (is_prime_bad 8191)
 ; very big prime number 2147483647
 
 (defn -main
