@@ -5,11 +5,21 @@
 (defmacro dbg[x] `(let [x# ~x] (println "dbg:" '~x "=" x#) x#))
 
 ;; tail-call-optimization
-(defn is_not_prime [x acc1] (cond (= x acc1) false :else (or (= 0 (dbg (mod x acc1))) (recur x (+ acc1 1)))))
+(defn is_not_prime [x acc1]
+  (cond
+    (= x acc1) false
+    :else (or
+            (= 0 (dbg (mod x acc1)))
+            (recur x (+ acc1 1)))))
 
 
 ;; without tail-call-optimization
-(defn is_not_prime_bad [x acc1] (cond (= x acc1) false :else (or (is_not_prime_bad x (+ acc1 1)) (= 0 (dbg (mod x acc1))))))
+(defn is_not_prime_bad [x acc1]
+  (cond
+    (= x acc1) false
+    :else (or
+            (is_not_prime_bad x (+ acc1 1))
+            (= 0 (dbg (mod x acc1))))))
 
 
 (defn is_prime [x]
@@ -18,12 +28,21 @@
     (= x 2) true
     :else (not (is_not_prime x 2))))
 
+(assert (is_prime 1))
+(assert (is_prime 2))
+(assert (is_prime 5))
+(assert (not (is_prime 12)))
+
 (defn is_prime_bad [x]
   (cond
     (= x 1) true
     (= x 2) true
     :else (not (is_not_prime_bad x 2))))
 
+(assert (is_prime_bad 1))
+(assert (is_prime_bad 2))
+(assert (is_prime_bad 5))
+(assert (not (is_prime_bad 12)))
 
 ; (is_prime 8191)
 ; stackoverflow:
