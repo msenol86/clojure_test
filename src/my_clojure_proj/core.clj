@@ -49,6 +49,57 @@
 ; (is_prime_bad 8191)
 ; very big prime number 2147483647
 
+
+
+(defn fact [x]
+  (if
+    (< x 2)
+    1
+    (* x (fact (- x 1)))))
+
+(assert (= (fact 5) 120))
+(assert (= (fact 1) 1))
+(assert (= (fact 0) 1))
+(assert (= (fact 2) 2))
+
+
+(defn digits [n]
+  (loop [result (list), n n]
+    (if (pos? n)
+      (recur (conj result (rem n 10))
+             (quot n 10))
+      result)))
+
+(assert (= (digits 15) '(1 5)))
+(assert (= (digits 40585) '(4 0 5 8 5)))
+
+(defn weird_pattern? [a]
+  (= a (reduce + (map (fn [x] (fact x)) (digits a)))))
+
+; Weird Patterns:
+; 1 = 1!
+; 2 = 2!
+; 145 = 1! + 4! + 5!
+; 40585 = 4! + 0! + 5! + 8! + 5!
+; There are no other numbers fit to this pattern
+(assert (weird_pattern? 1))
+(assert (weird_pattern? 2))
+(assert (weird_pattern? 145))
+(assert (weird_pattern? 40585))
+(assert (not (weird_pattern? 10)))
+(assert (not (weird_pattern? 146)))
+
+
+(defn find_weird_numbers_until [x]
+   (reverse
+     (reduce
+       (fn [a b] (if (weird_pattern? b) (cons b a) a))
+       nil
+       (rest (range (+ (bigint x) 1)))))) ;applied rest to elimnate 0 at start
+
+(assert (= '(1 2) (find_weird_numbers_until 5)))
+(assert (= '(1 2 145 40585) (find_weird_numbers_until 40585)))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
